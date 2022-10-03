@@ -26,22 +26,28 @@ ukb3 = mutate(ukb3, "SQW5" = nchar(dayofweek_questionnaire_completed_f20080_4_0)
 
 #Get Vegetarians for Instance 0
 i = 763
-ukbv1 = filter(ukb3, ukb3$SQW1 & (ukb3[,i] == "Vegetarian" | ukb3[,i+1] == "Vegetarian" | ukb3[,i+2] == "Vegetarian" | ukb3[,i+3] == "Vegetarian" | ukb3[,i+4] == "Vegetarian" | ukb3[,i+5] == "Vegetarian"))
+ukbv1 = filter(ukb3, ukb3$SQW1 & (ukb3[,i] == "Vegetarian" | ukb3[,i+1] == "Vegetarian" | ukb3[,i+2] == "Vegetarian" | ukb3[,i+3] == "Vegetarian" | ukb3[,i+4] == "Vegetarian" | ukb3[,i+5] == "Vegetarian" | 
+                                    ukb3[,i] == "Vegan" | ukb3[,i+1] == "Vegan" | ukb3[,i+2] == "Vegan" | ukb3[,i+3] == "Vegan" | ukb3[,i+4] == "Vegan" | ukb3[,i+5] == "Vegan"))
 #Get Vegetarians for Instance 1
 i = 769
-ukbv2 = filter(ukb3, ukb3$SQW2 & (ukb3[,i] == "Vegetarian" | ukb3[,i+1] == "Vegetarian" | ukb3[,i+2] == "Vegetarian" | ukb3[,i+3] == "Vegetarian" | ukb3[i+4] == "Vegetarian" | ukb3[,i+5] == "Vegetarian"))
+ukbv2 = filter(ukb3, ukb3$SQW2 & (ukb3[,i] == "Vegetarian" | ukb3[,i+1] == "Vegetarian" | ukb3[,i+2] == "Vegetarian" | ukb3[,i+3] == "Vegetarian" | ukb3[,i+4] == "Vegetarian" | ukb3[,i+5] == "Vegetarian" | 
+                                    ukb3[,i] == "Vegan" | ukb3[,i+1] == "Vegan" | ukb3[,i+2] == "Vegan" | ukb3[,i+3] == "Vegan" | ukb3[,i+4] == "Vegan" | ukb3[,i+5] == "Vegan"))
 #Get Vegetarians for Instance 2
 i = 775
-ukbv3 = filter(ukb3, ukb3$SQW3 & (ukb3[,i] == "Vegetarian" | ukb3[,i+1] == "Vegetarian" | ukb3[,i+2] == "Vegetarian" | ukb3[,i+3] == "Vegetarian" | ukb3[i+4] == "Vegetarian" | ukb3[,i+5] == "Vegetarian"))
+ukbv3 = filter(ukb3, ukb3$SQW3 & (ukb3[,i] == "Vegetarian" | ukb3[,i+1] == "Vegetarian" | ukb3[,i+2] == "Vegetarian" | ukb3[,i+3] == "Vegetarian" | ukb3[,i+4] == "Vegetarian" | ukb3[,i+5] == "Vegetarian" | 
+                                    ukb3[,i] == "Vegan" | ukb3[,i+1] == "Vegan" | ukb3[,i+2] == "Vegan" | ukb3[,i+3] == "Vegan" | ukb3[,i+4] == "Vegan" | ukb3[,i+5] == "Vegan"))
 #Get Vegetarians for Instance 3
 i = 781
-ukbv4 = filter(ukb3, ukb3$SQW4 & (ukb3[,i] == "Vegetarian" | ukb3[,i+1] == "Vegetarian" | ukb3[,i+2] == "Vegetarian" | ukb3[,i+3] == "Vegetarian" | ukb3[i+4] == "Vegetarian" | ukb3[,i+5] == "Vegetarian"))
+ukbv4 = filter(ukb3, ukb3$SQW4 & (ukb3[,i] == "Vegetarian" | ukb3[,i+1] == "Vegetarian" | ukb3[,i+2] == "Vegetarian" | ukb3[,i+3] == "Vegetarian" | ukb3[,i+4] == "Vegetarian" | ukb3[,i+5] == "Vegetarian" | 
+                                    ukb3[,i] == "Vegan" | ukb3[,i+1] == "Vegan" | ukb3[,i+2] == "Vegan" | ukb3[,i+3] == "Vegan" | ukb3[,i+4] == "Vegan" | ukb3[,i+5] == "Vegan"))
 #Get Vegetarians for Instance 4
 i = 787
-ukbv5 = filter(ukb3, ukb3$SQW5 & (ukb3[,i] == "Vegetarian" | ukb3[,i+1] == "Vegetarian" | ukb3[,i+2] == "Vegetarian" | ukb3[,i+3] == "Vegetarian" | ukb3[i+4] == "Vegetarian" | ukb3[,i+5] == "Vegetarian"))
+ukbv5 = filter(ukb3, ukb3$SQW5 & (ukb3[,i] == "Vegetarian" | ukb3[,i+1] == "Vegetarian" | ukb3[,i+2] == "Vegetarian" | ukb3[,i+3] == "Vegetarian" | ukb3[,i+4] == "Vegetarian" | ukb3[,i+5] == "Vegetarian" | 
+                                    ukb3[,i] == "Vegan" | ukb3[,i+1] == "Vegan" | ukb3[,i+2] == "Vegan" | ukb3[,i+3] == "Vegan" | ukb3[,i+4] == "Vegan" | ukb3[,i+5] == "Vegan"))
 
+ukb4 = rbind(ukbv1, ukbv2, ukbv3, ukbv4, ukbv5)
 #Mark whose veg and who isn't out of everyone who took the dietary survey
-ukb5 = mutate(ukb3, CSRV = eid %in% ukb4$eid)
+ukb6 = mutate(ukb3, CSRV = eid %in% ukb4$eid)
 
 j = 4679
 for (i in 1:5) {
@@ -69,4 +75,9 @@ ukb6 = mutate(ukb6, ateFish = eid %in% ukbf$eid)
 
 export(ukb6, "ukb6.tsv")
 
+#intial SSRV check on columns 115, 118, 121, 124, 127, 130, 133
 
+
+ukbi = filter(ukb6, ukb6[,115] == "Never" & ukb6[,118] == "Never" & ukb6[,121] == "Never" & ukb6[,124] == "Never" & ukb6[,127] == "Never" & ukb6[,130] == "Never" & ukb6[,133] == "Never")
+ukb6 = mutate(ukb6, initVeg = eid %in% ukbi$eid)  
+ukb6 = mutate(ukb6, dietChange = ukb6[,175] == "No")  
