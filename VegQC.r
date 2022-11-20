@@ -1,7 +1,8 @@
 library(tidyverse)
 library(rio)
+library(ukbtools)
 
-#load into UKB_DF -> tibble -> save for future use
+#load into UKB_DF -> tibble -> save for future use as RIO compatible format
 #ukb = as_tibble(ukb_df("ukb34137"))
 #export(ukb, "ukb341372.tsv")
 
@@ -40,33 +41,19 @@ ukbv5 = filter(ukb, ukb$SQW5 & (ukb[,i] == "Vegetarian" | ukb[,i+1] == "Vegetari
 
 ukb4 = rbind(ukbv1, ukbv2, ukbv3, ukbv4, ukbv5)
 #Mark whose veg and who isn't out of everyone who took the dietary survey
-ukb = mutate(ukb, CSRV = eid %in% ukb4$eid)
+ukb5 = mutate(ukb, CSRV = eid %in% ukb4$eid)
 
-#j = 4679
-for (i in 1:5) {
+j = 4679
+ for (i in 1:5) {
   col = paste("SQW", i, sep="")
-  meatcol = paste("meat_consumers_f103000_", (i-1), "_0", sep="")
-  ukbm1 = filter(ukb5, ukb5[,col] & ukb5[,meatcol] == "Yes")
+  ukbm1 = filter(ukb5, ukb5[col] & ukb5[,j+i] == "Yes")
   if (i == 1) {
     ukbm = ukbm1
   } else {
-    rbind(ukbm, ukbm1)
+    ukbm = rbind(ukbm, ukbm1)
   }
 }
 ukb6 = mutate(ukb5, ateMeat = eid %in% ukbm$eid)
-
-for (i in 1:5) {
-  col = paste("SQW", i, sep="")
-  meatcol = paste("fish_consumer_f103140_", (i-1), "_0", sep="")
-  ukbm1 = filter(ukb6, ukb6[,col] & ukb6[,meatcol] == "Yes")
-  if (i == 1) {
-    ukbm = ukbm1
-  } else {
-    rbind(ukbm, ukbm1)
-  }
-}
-ukb7 = mutate(ukb6, ateFish = eid %in% ukbm$eid)
-
 
 j = 4744
 for (i in 1:5) {
@@ -75,18 +62,26 @@ for (i in 1:5) {
   if (i == 1) {
     ukbf = ukbf1
   } else {
-    rbind(ukbf, ukbf1)
+    ukbf = rbind(ukbf, ukbf1)
   }
 }
 ukb6 = mutate(ukb6, ateFish = eid %in% ukbf$eid)
 
-export(ukb6, "ukb6.tsv")
+#export(ukb6, "ukb6.tsv")
 
 #intial SSRV check on columns 115, 118, 121, 124, 127, 130, 133
-
-
 ukbi = filter(ukb6, ukb6[,115] == "Never" & ukb6[,118] == "Never" & ukb6[,121] == "Never" & ukb6[,124] == "Never" & ukb6[,127] == "Never" & ukb6[,130] == "Never" & ukb6[,133] == "Never")
 ukb6 = mutate(ukb6, initVeg = eid %in% ukbi$eid)  
-ukb6 = mutate(ukb6, dietChange = ukb6[,175] == "No")  
+
+#Diet consistency check
+ukb6 = mutate(ukb6, consistentDiet = ukb6[,175] == "No")  
+
+#Define SSRV
+ukb6 = mutate(ukb6, SSRV = CSRV & !ateFish & !ateMeat & consistentDiet & initVeg)
+
+ambigious = filter(ukb6, CSRV & !SSRV)$eid
+ukb6 = mutate(ukb6, SSRV = ifelse(eid %in% ambigious, NA, SSRV))
+
+write.csv(ukb6, "filteredFinalVeg.csv", row.names = FALSE, quote = FALSE)
 
 
