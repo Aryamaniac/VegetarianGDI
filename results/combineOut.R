@@ -13,7 +13,7 @@ setwd(paste("/scratch/as58810/ProjectFall2022/results/", pheno, "/", sep = ""))
 start = as_tibble(import(paste(pheno, "x", expo, "-chr", "1", ".txt", sep = "")))
 
 for (i in 2:22) {
-	add = as_tibble(import(paste(pheno, "x", expo, "-chr", "1", ".txt", sep = ""))) 
+	add = as_tibble(import(paste(pheno, "x", expo, "-chr", i, ".txt", sep = ""))) 
 	start = rbind(start, add)
 }
 
